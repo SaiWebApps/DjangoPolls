@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %} Poll {% endblock %}
+{% block heading %} {{ poll.question }} {% endblock %}
+   
+{% block table %}
+  {% if poll.choice_set.all %}
+  <thead>
+   <tr>
+     <th> Choice </th>
+     <th> Number of Votes </th>
+   </tr>
+  </thead>
+  {% endif %}
+  
+  {% for choice in poll.choice_set.all %}
+   <form action="{% url 'polls:upVote' poll.id choice.id %}" method="POST">
+   {% csrf_token %}
+    <tr>
+      <td> {{ choice.choice_text }}  </td>
+      <td> {{ choice.votes }} </td>
+      <td> <input type="submit" class="btn btn-info" value=&#x2713 /> </td>
+    </tr>
+   </form>
+   {% endfor %}
+{% endblock %}  
+   
+{% block form %}
+   <form action="{% url 'polls:createChoice' poll.id %}" method="POST">
+   {% csrf_token %}
+      {% if form.choice_text.errors %}
+        {% for error in form.choice_text.errors %}
+          <p style="color:red;"><strong>{{ error }}</strong></p>
+        {% endfor %}
+      {% endif %}
+      
+      <label> Enter a choice: </label> 
+      <div class="input-append">
+        <input type="text" id="appendedInputButton" name="choice_text" />
+        <input type="submit" class="btn btn-primary" value="Create Choice" />
+      </div>
+   </form>
+{% endblock %}

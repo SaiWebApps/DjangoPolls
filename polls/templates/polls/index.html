@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+  
+{% block heading %} Polls Created Thus Far {% endblock %}
+
+<!-- Display all polls that the user has created so far. --> 
+{% block list %}
+  {% if poll_list %}
+    {% for poll in poll_list %}
+      <li> <a href="/polls/{{ poll.id }}/"> {{ poll.question }} </a> </li>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
+      
+<!-- Allow the user to create new polls. -->
+{% block form %}
+<form action="{% url 'polls:createPoll' %}" method="POST">
+{% csrf_token %}
+ {% if form.question.errors %}
+   {% for error in form.question.errors %}
+     <p style="color:red;"><strong>{{ error }}</strong></p>
+   {% endfor %}
+ {% endif %}
+      
+  <label> Question: </label> 
+  <div class="input-append">
+    <input type="text" id="appendedInputButton" name="question" />
+    <input type="submit" class="btn btn-primary" value="Create Poll" />
+  </div>
+</form>
+{% endblock %}
